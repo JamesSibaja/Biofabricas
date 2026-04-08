@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Biofábricas Costa Rica</title>
-
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="css/index.css" />
@@ -51,27 +50,9 @@
           </div>
         </div>
 
-        <div class="hero-stats">
-          <div class="stat">
-            <strong>24</strong>
-            <span>Biofábricas</span>
+        <div class="hero-stats" id="heroStats">
+            <!-- KPIs dinámicos -->
           </div>
-
-          <div class="stat">
-            <strong>7</strong>
-            <span>Provincias</span>
-          </div>
-
-          <div class="stat">
-            <strong>+120</strong>
-            <span>Recursos</span>
-          </div>
-
-          <div class="stat">
-            <strong>100%</strong>
-            <span>Cobertura</span>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -141,8 +122,11 @@
         />
 
         <div class="card-content">
-
-          <div class="card-header">
+            <h3>Información de Biofábrica</h3>
+            <div class="help-box">
+                Haz clic en un punto del mapa para ver la ficha técnica.
+              </div>
+          <!-- <div class="card-header">
             <h3>Biofábrica Central</h3>
             <span class="status">Activa</span>
           </div>
@@ -165,33 +149,41 @@
             <button>Videos</button>
             <button>Ficha técnica</button>
           </div>
-        </div>
+        </div> -->
       </aside>
     </section>
 
     <!-- RECURSOS -->
-    <section id="recursos" class="cards">
+    <section id="recursos" class="resources-section">
+        <div class="resources-header">
+          <h2>Recursos técnicos</h2>
+          <p>Documentos, videos, fichas y materiales de apoyo</p>
+        </div>
+      
+        <div id="recursosGrid" class="resource-grid"></div>
+      </section>
+    <!-- <section id="recursos" class="cards">
 
       <div class="card">
-        <h3>📄 Documentos</h3>
+        <h3>Documentos</h3>
         <p>Manual técnico, reportes y PDFs.</p>
       </div>
 
       <div class="card">
-        <h3>🎥 Videos</h3>
+        <h3>Videos</h3>
         <p>Webinars, tutoriales y cápsulas.</p>
       </div>
 
       <div class="card">
-        <h3>📍 Fichas</h3>
+        <h3>Fichas</h3>
         <p>Información detallada por planta.</p>
       </div>
 
       <div class="card">
-        <h3>📊 Indicadores</h3>
+        <h3>Indicadores</h3>
         <p>KPIs e impacto territorial.</p>
       </div>
-    </section>
+    </section> -->
   </main>
 
   <!-- FOOTER -->
@@ -220,7 +212,9 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
   <script src="js/map.js"></script>
+  
 
 </body>
 </html>

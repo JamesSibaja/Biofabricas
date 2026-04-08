@@ -14,6 +14,8 @@ const map = L.map("map", {
   zoomControl: true
 }).setView([9.93, -84.08], 8);
 
+const markers = [];
+
 // =============================
 // CAPA BASE
 // =============================
@@ -22,34 +24,6 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors"
 }).addTo(map);
 
-// =============================
-// DATOS DE PRUEBA
-// luego esto vendrá desde sheets
-// =============================
-const biofabricas = [
-  {
-    id: 1,
-    name: "Biofábrica Central",
-    lat: 9.93,
-    lng: -84.08,
-    region: "San José",
-    estado: "Activa",
-    descripcion:
-      "Centro principal dedicado al compostaje y tratamiento orgánico.",
-    tags: ["Compostaje", "Capacitación", "Circular"]
-  },
-  {
-    id: 2,
-    name: "Biofábrica Norte",
-    lat: 10.3,
-    lng: -84.4,
-    region: "Alajuela",
-    estado: "Activa",
-    descripcion:
-      "Nodo regional para producción de biofertilizantes.",
-    tags: ["Biofertilizantes", "Regional"]
-  }
-];
 
 // =============================
 // PANEL LATERAL
@@ -62,8 +36,9 @@ const panel = document.getElementById("infoPanel");
 function renderPanel(bio) {
   panel.innerHTML = `
     <img 
-      src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800"
+      src="${bio.imagen || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800'}"
       alt="${bio.name}"
+      onerror="this.src='https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800'"
     />
 
     <div class="card-content">
@@ -104,58 +79,116 @@ const greenIcon = L.icon({
 });
 
 // =============================
-// MARCADORES
+// DATOS Google Sheets
 // =============================
-const markers = [];
+async function initMapData() {
+  const biofabricas = await fetchBiofabricas();
 
-biofabricas.forEach((bio) => {
-  const marker = L.marker([bio.lat, bio.lng], {
-    icon: greenIcon
-  }).addTo(map);
+  biofabricas.forEach((bio) => {
+    const marker = L.marker([bio.lat, bio.lng], {
+      icon: greenIcon
+    }).addTo(map);
 
-  marker.bindPopup(`
-    <strong>${bio.name}</strong><br>
-    ${bio.region}<br>
-    <small>Haz clic para ver ficha</small>
-  `);
+    marker.bindPopup(`
+      <div class="map-popup">
+        <div class="popup-header">
+          <h4>${bio.name}</h4>
+          <span class="popup-status">${bio.estado}</span>
+        </div>
+    
+        <p class="popup-region">📍 ${bio.region}, Costa Rica</p>
+    
+        <p class="popup-desc">
+          ${bio.descripcion}
+        </p>
+    
+        <div class="popup-tags">
+          ${bio.tags
+            .slice(0, 2)
+            .map(tag => `<span>${tag}</span>`)
+            .join("")}
+        </div>
+    
+        <div class="popup-cta">
+          Haz clic para ver ficha →
+        </div>
+      </div>
+    `);
 
-  marker.on("click", () => {
-    renderPanel(bio);
+    marker.on("click", () => {
+      renderPanel(bio);
 
-    map.flyTo([bio.lat, bio.lng], 10, {
-      duration: 1.2
+      map.flyTo(
+        [bio.lat, bio.lng],
+        10,
+        { duration: 1 }
+      );
     });
-  });
 
-  markers.push({ marker, bio });
-});
+    markers.push({ marker, bio });
+  });
+}
+
 
 // =============================
 // BÚSQUEDA
 // =============================
 const searchInput = document.getElementById("searchBox");
+const provinciaFilter = document.getElementById("provinciaFilter");
+const estadoFilter = document.getElementById("estadoFilter");
+const tipoFilter = document.getElementById("tipoFilter");
 const searchBtn = document.getElementById("searchBtn");
 const resetBtn = document.getElementById("resetBtn");
 
 function searchBiofabrica() {
   const query = searchInput.value.toLowerCase().trim();
+  const provincia = provinciaFilter.value;
+  const estado = estadoFilter.value;
+  const tipo = tipoFilter.value;
 
-  const result = markers.find(item =>
-    item.bio.name.toLowerCase().includes(query) ||
-    item.bio.region.toLowerCase().includes(query)
-  );
+  const resultados = markers.filter(item => {
+    const bio = item.bio;
 
-  if (result) {
+    const matchTexto =
+      query === "" ||
+      bio.name.toLowerCase().includes(query) ||
+      bio.region.toLowerCase().includes(query);
+
+    const matchProvincia =
+      provincia === "Todas las provincias" ||
+      bio.region === provincia;
+
+    const matchEstado =
+      estado === "Todos los estados" ||
+      bio.estado === estado;
+
+    const matchTipo =
+      tipo === "Todos los tipos" ||
+      bio.tags.some(tag =>
+        tag.toLowerCase().includes(tipo.toLowerCase())
+      );
+
+    return (
+      matchTexto &&
+      matchProvincia &&
+      matchEstado &&
+      matchTipo
+    );
+  });
+
+  if (resultados.length > 0) {
+    const primerResultado = resultados[0];
+
     map.flyTo(
-      [result.bio.lat, result.bio.lng],
+      [primerResultado.bio.lat, primerResultado.bio.lng],
       10,
       { duration: 1 }
     );
 
-    result.marker.openPopup();
-    renderPanel(result.bio);
+    primerResultado.marker.openPopup();
+    renderPanel(primerResultado.bio);
   } else {
-    alert("No se encontró la biofábrica.");
+    alert("No se encontraron resultados.");
   }
 }
 
@@ -172,17 +205,15 @@ searchInput.addEventListener("keypress", (e) => {
 // =============================
 resetBtn.addEventListener("click", () => {
   searchInput.value = "";
+  provinciaFilter.selectedIndex = 0;
+  estadoFilter.selectedIndex = 0;
+  tipoFilter.selectedIndex = 0;
 
   map.flyTo([9.93, -84.08], 8, {
     duration: 1
   });
 
   panel.innerHTML = `
-    <img 
-      src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800"
-      alt="Biofábrica"
-    />
-
     <div class="card-content">
       <h3>Selecciona una biofábrica</h3>
       <p>Haz clic en un marcador para ver la ficha.</p>
@@ -190,7 +221,121 @@ resetBtn.addEventListener("click", () => {
   `;
 });
 
+provinciaFilter.addEventListener("change", searchBiofabrica);
+estadoFilter.addEventListener("change", searchBiofabrica);
+tipoFilter.addEventListener("change", searchBiofabrica);
+
 // =============================
 // PANEL INICIAL
 // =============================
 resetBtn.click();
+
+async function renderKPIs() {
+  const heroStats = document.getElementById("heroStats");
+
+  const kpis = await fetchKPIs();
+
+  heroStats.innerHTML = kpis.map(kpi => `
+    <div class="stat">
+      <strong>${kpi.valor}</strong>
+      <span>${kpi.nombre}</span>
+    </div>
+  `).join("");
+}
+
+// =============================
+// RECURSOS
+// =============================
+function getYoutubeEmbed(url) {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/
+  );
+
+  return match
+    ? `https://www.youtube.com/embed/${match[1]}`
+    : null;
+}
+
+function renderVideoCard(recurso) {
+  const embed = getYoutubeEmbed(recurso.enlace);
+
+  return `
+    <div class="resource-card">
+      <iframe
+        src="${embed}"
+        title="${recurso.nombre}"
+        allowfullscreen
+      ></iframe>
+
+      <div class="resource-content">
+        <h3>${recurso.nombre}</h3>
+        <p>Video / Webinar</p>
+        <a href="${recurso.enlace}" target="_blank">
+          Ver video
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function renderPDFCard(recurso) {
+  return `
+    <div class="resource-card">
+      <iframe
+        src="${recurso.enlace}"
+        title="${recurso.nombre}"
+      ></iframe>
+
+      <div class="resource-content">
+        <h3>${recurso.nombre}</h3>
+        <p>Documento PDF</p>
+        <a href="${recurso.enlace}" target="_blank">
+          Abrir documento
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function renderGenericCard(recurso) {
+  return `
+    <div class="resource-card">
+      <div class="resource-placeholder">
+        📁
+      </div>
+
+      <div class="resource-content">
+        <h3>${recurso.nombre}</h3>
+        <p>${recurso.tipo}</p>
+        <a href="${recurso.enlace}" target="_blank">
+          Abrir recurso
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+async function renderRecursos() {
+  const container = document.getElementById("recursosGrid");
+  const recursos = await fetchRecursos();
+
+  container.innerHTML = recursos.map(recurso => {
+    if (recurso.tipo.toLowerCase() === "video") {
+      return renderVideoCard(recurso);
+    }
+
+    if (recurso.tipo.toLowerCase() === "pdf") {
+      return renderPDFCard(recurso);
+    }
+
+    return renderGenericCard(recurso);
+  }).join("");
+}
+
+// =============================
+// iNICIALIZAR
+// =============================
+
+initMapData();
+renderKPIs();
+renderRecursos();
