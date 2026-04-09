@@ -155,13 +155,37 @@
 
     <!-- RECURSOS -->
     <section id="recursos" class="resources-section">
-        <div class="resources-header">
-          <h2>Recursos técnicos</h2>
-          <p>Documentos, videos, fichas y materiales de apoyo</p>
+      <div class="resources-header">
+        <h2>Recursos técnicos</h2>
+        <p>Documentos, videos, fichas y materiales de apoyo</p>
+      </div>
+    
+      <div class="resource-tabs" id="resourceTabs">
+        <button class="tab active" data-cat="Todos">Todos</button>
+        <button class="tab" data-cat="Capacitación">Capacitación</button>
+        <button class="tab" data-cat="Documentación">Documentación</button>
+        <button class="tab" data-cat="Fichas">Fichas</button>
+      </div>
+    
+      <div id="recursosGrid" class="resource-grid"></div>
+    
+      <div class="load-more-wrap">
+        <button id="loadMoreBtn">Cargar más</button>
+      </div>
+    </section>
+    
+   
+
+    <div id="resourceModal" class="resource-modal hidden">
+      <div class="modal-box">
+        <div class="modal-actions">
+          <button id="fullscreenBtn">⛶</button>
+          <button id="closeModal">✕</button>
         </div>
-      
-        <div id="recursosGrid" class="resource-grid"></div>
-      </section>
+    
+        <div id="modalContent"></div>
+      </div>
+    </div>
     <!-- <section id="recursos" class="cards">
 
       <div class="card">

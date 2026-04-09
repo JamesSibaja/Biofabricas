@@ -246,56 +246,198 @@ async function renderKPIs() {
 // =============================
 // RECURSOS
 // =============================
-function getYoutubeEmbed(url) {
+
+let recursosVisibles = 6;
+let recursosData = [];
+let categoriaActual = "Todos";
+
+function openResource(tipo, enlace) {
+  const modal = document.getElementById("resourceModal");
+  const content = document.getElementById("modalContent");
+
+  if (tipo.toLowerCase().includes("video")) {
+    const embed = getYoutubeEmbed(enlace);
+
+    content.innerHTML = `
+      <iframe
+        src="${embed}"
+        title="Video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    `;
+  } else {
+    content.innerHTML = `
+      <iframe
+        src="${enlace}"
+        title="PDF"
+      ></iframe>
+    `;
+  }
+
+  modal.classList.remove("hidden");
+}
+
+// document.getElementById("closeModal").addEventListener("click", () => {
+//   document.getElementById("resourceModal").classList.add("hidden");
+// });
+
+function closeResourceModal() {
+  const modal = document.getElementById("resourceModal");
+  const content = document.getElementById("modalContent");
+
+  // salir de pantalla completa si está activa
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
+
+  // detener video / pdf eliminando iframe
+  content.innerHTML = "";
+
+  // ocultar modal
+  modal.classList.add("hidden");
+}
+
+document
+  .getElementById("resourceModal")
+  .addEventListener("click", (e) => {
+    if (e.target.id === "resourceModal") {
+      closeResourceModal();
+    }
+  });
+
+document
+  .getElementById("closeModal")
+  .addEventListener("click", closeResourceModal);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeResourceModal();
+    }
+  });
+
+function getYoutubeThumbnail(url) {
   const match = url.match(
     /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/
   );
 
   return match
-    ? `https://www.youtube.com/embed/${match[1]}`
-    : null;
+    ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
+    : "";
 }
 
+function getYoutubeEmbed(url) {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^?&/]+)/
+  );
+
+  return match
+    ? `https://www.youtube.com/embed/${match[1]}?autoplay=1`
+    : "";
+}
+
+// function getYoutubeEmbed(url) {
+//   const match = url.match(
+//     /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/
+//   );
+
+//   return match
+//     ? `https://www.youtube.com/embed/${match[1]}`
+//     : null;
+// }
+
 function renderVideoCard(recurso) {
-  const embed = getYoutubeEmbed(recurso.enlace);
+  const thumb = getYoutubeThumbnail(recurso.enlace);
 
   return `
-    <div class="resource-card">
-      <iframe
-        src="${embed}"
-        title="${recurso.nombre}"
-        allowfullscreen
-      ></iframe>
+    <div class="resource-card" onclick="openResource('${recurso.tipo}','${recurso.enlace}')">
+      <img class="resource-preview" src="${thumb}" alt="${recurso.nombre}" />
 
       <div class="resource-content">
         <h3>${recurso.nombre}</h3>
         <p>Video / Webinar</p>
-        <a href="${recurso.enlace}" target="_blank">
-          Ver video
-        </a>
       </div>
     </div>
   `;
 }
 
-function renderPDFCard(recurso) {
-  return `
-    <div class="resource-card">
-      <iframe
-        src="${recurso.enlace}"
-        title="${recurso.nombre}"
-      ></iframe>
+// function renderVideoCard(recurso) {
+//   const embed = getYoutubeEmbed(recurso.enlace);
 
-      <div class="resource-content">
-        <h3>${recurso.nombre}</h3>
-        <p>Documento PDF</p>
-        <a href="${recurso.enlace}" target="_blank">
-          Abrir documento
-        </a>
+//   return `
+//     <div class="resource-card">
+//       <iframe
+//         src="${embed}"
+//         title="${recurso.nombre}"
+//         allowfullscreen
+//       ></iframe>
+
+//       <div class="resource-content">
+//         <h3>${recurso.nombre}</h3>
+//         <p>Video / Webinar</p>
+//         <a href="${recurso.enlace}" target="_blank">
+//           Ver video
+//         </a>
+//       </div>
+//     </div>
+//   `;
+// }
+
+document
+  .getElementById("fullscreenBtn")
+  .addEventListener("click", () => {
+    const modal = document.querySelector(".modal-box");
+
+    if (modal.requestFullscreen) {
+      modal.requestFullscreen();
+    }
+  });
+
+  function renderPDFCard(recurso) {
+    return `
+      <div class="resource-card">
+        <div class="pdf-preview-wrap">
+          <iframe
+            class="pdf-preview"
+            src="${recurso.enlace}#page=1&view=FitH"
+            title="${recurso.nombre}"
+            loading="lazy"
+          ></iframe>
+        </div>
+  
+        <div class="resource-content">
+          <h3>${recurso.nombre}</h3>
+          <p>Documento PDF</p>
+  
+          <button
+            class="resource-btn"
+            onclick="openResource('pdf', '${recurso.enlace}')"
+          >
+            Ver documento
+          </button>
+        </div>
       </div>
-    </div>
-  `;
-}
+    `;
+  }
+
+// function renderPDFCard(recurso) {
+//   return `
+//     <div class="resource-card">
+//       <iframe
+//         src="${recurso.enlace}"
+//         title="${recurso.nombre}"
+//       ></iframe>
+
+//       <div class="resource-content">
+//         <h3>${recurso.nombre}</h3>
+//         <p>Documento PDF</p>
+//         <a href="${recurso.enlace}" target="_blank">
+//           Abrir documento
+//         </a>
+//       </div>
+//     </div>
+//   `;
+// }
 
 function renderGenericCard(recurso) {
   return `
@@ -317,9 +459,25 @@ function renderGenericCard(recurso) {
 
 async function renderRecursos() {
   const container = document.getElementById("recursosGrid");
-  const recursos = await fetchRecursos();
 
-  container.innerHTML = recursos.map(recurso => {
+  // solo carga una vez desde Sheets
+  if (recursosData.length === 0) {
+    recursosData = await fetchRecursos();
+  }
+
+  // filtrar por categoría
+  let recursosFiltrados = recursosData;
+
+  if (categoriaActual !== "Todos") {
+    recursosFiltrados = recursosData.filter(r =>
+      r.categoria === categoriaActual
+    );
+  }
+
+  // limitar cantidad visible
+  const visibles = recursosFiltrados.slice(0, recursosVisibles);
+
+  container.innerHTML = visibles.map(recurso => {
     if (recurso.tipo.toLowerCase() === "video") {
       return renderVideoCard(recurso);
     }
@@ -330,7 +488,38 @@ async function renderRecursos() {
 
     return renderGenericCard(recurso);
   }).join("");
+
+  // botón cargar más
+  const btn = document.getElementById("loadMoreBtn");
+
+  if (recursosVisibles >= recursosFiltrados.length) {
+    btn.style.display = "none";
+  } else {
+    btn.style.display = "inline-block";
+  }
 }
+
+document
+  .getElementById("loadMoreBtn")
+  .addEventListener("click", () => {
+    recursosVisibles += 6;
+    renderRecursos();
+  });
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      categoriaActual = tab.dataset.cat;
+      recursosVisibles = 6;
+  
+      document
+        .querySelectorAll(".tab")
+        .forEach(t => t.classList.remove("active"));
+  
+      tab.classList.add("active");
+  
+      renderRecursos();
+    });
+  });
 
 // =============================
 // iNICIALIZAR
