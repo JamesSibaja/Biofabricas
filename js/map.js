@@ -87,7 +87,7 @@ async function initMapData() {
   biofabricas.forEach((bio) => {
     const marker = L.marker([bio.lat, bio.lng], {
       icon: greenIcon
-    }).addTo(map);
+    }).addTo(markerLayer);
 
     marker.bindPopup(`
       <div class="map-popup">
@@ -133,6 +133,8 @@ async function initMapData() {
 // =============================
 // BÚSQUEDA
 // =============================
+const markerLayer = L.layerGroup().addTo(map);
+
 const searchInput = document.getElementById("searchBox");
 const provinciaFilter = document.getElementById("provinciaFilter");
 const estadoFilter = document.getElementById("estadoFilter");
@@ -149,10 +151,17 @@ function searchBiofabrica() {
   const resultados = markers.filter(item => {
     const bio = item.bio;
 
+    const textoCompleto = `
+      ${bio.name}
+      ${bio.region}
+      ${bio.descripcion}
+      ${bio.estado}
+      ${bio.tags.join(" ")}
+    `.toLowerCase();
+
     const matchTexto =
       query === "" ||
-      bio.name.toLowerCase().includes(query) ||
-      bio.region.toLowerCase().includes(query);
+      textoCompleto.includes(query);
 
     const matchProvincia =
       provincia === "Todas las provincias" ||
@@ -176,17 +185,26 @@ function searchBiofabrica() {
     );
   });
 
+  // ocultar todos
+  markerLayer.clearLayers();
+
   if (resultados.length > 0) {
-    const primerResultado = resultados[0];
+    const bounds = [];
 
-    map.flyTo(
-      [primerResultado.bio.lat, primerResultado.bio.lng],
-      10,
-      { duration: 1 }
-    );
+    resultados.forEach(item => {
+      item.marker.addTo(markerLayer);
 
-    primerResultado.marker.openPopup();
-    renderPanel(primerResultado.bio);
+      bounds.push([
+        item.bio.lat,
+        item.bio.lng
+      ]);
+    });
+
+    map.fitBounds(bounds, {
+      padding: [40, 40]
+    });
+
+    renderPanel(resultados[0].bio);
   } else {
     alert("No se encontraron resultados.");
   }
@@ -209,21 +227,21 @@ resetBtn.addEventListener("click", () => {
   estadoFilter.selectedIndex = 0;
   tipoFilter.selectedIndex = 0;
 
+  markerLayer.clearLayers();
+
+  markers.forEach(item => {
+    item.marker.addTo(markerLayer);
+  });
+
   map.flyTo([9.93, -84.08], 8, {
     duration: 1
   });
-
-  panel.innerHTML = `
-    <div class="card-content">
-      <h3>Selecciona una biofábrica</h3>
-      <p>Haz clic en un marcador para ver la ficha.</p>
-    </div>
-  `;
 });
 
 provinciaFilter.addEventListener("change", searchBiofabrica);
 estadoFilter.addEventListener("change", searchBiofabrica);
 tipoFilter.addEventListener("change", searchBiofabrica);
+
 
 // =============================
 // PANEL INICIAL
@@ -232,15 +250,50 @@ resetBtn.click();
 
 async function renderKPIs() {
   const heroStats = document.getElementById("heroStats");
-
   const kpis = await fetchKPIs();
 
-  heroStats.innerHTML = kpis.map(kpi => `
-    <div class="stat">
-      <strong>${kpi.valor}</strong>
+  heroStats.innerHTML = kpis.map((kpi, index) => `
+    <div class="stat fade-up" style="animation-delay:${index * 0.15}s">
+      <strong class="counter" data-value="${kpi.valor}">
+        0
+      </strong>
       <span>${kpi.nombre}</span>
     </div>
   `).join("");
+
+  animateCounters();
+}
+
+function animateCounters() {
+  const counters = document.querySelectorAll(".counter");
+
+  counters.forEach(counter => {
+    const targetText = counter.dataset.value;
+    const target = parseInt(
+      targetText.replace(/\D/g, "")
+    );
+
+    const suffix = targetText.replace(/[0-9]/g, "");
+
+    let current = 0;
+    let currenttwo = 0;
+    const increment = target / 200;
+
+    const update = () => {
+      currenttwo += increment;
+      current = Math.ceil(currenttwo);
+
+      if (current >= target) {
+        counter.textContent = targetText;
+        return;
+      }
+
+      counter.textContent = current + suffix;
+      requestAnimationFrame(update);
+    };
+
+    update();
+  });
 }
 
 // =============================
@@ -250,6 +303,29 @@ async function renderKPIs() {
 let recursosVisibles = 6;
 let recursosData = [];
 let categoriaActual = "Todos";
+
+// document
+//   .getElementById("resourceSearch")
+//   .addEventListener("input", () => {
+//     recursosVisibles = 6;
+//     renderRecursos();
+//   });
+
+  document
+  .getElementById("resourceSearchBtn")
+  .addEventListener("click", () => {
+    recursosVisibles = 6;
+    renderRecursos();
+  });
+
+  document
+  .getElementById("resourceSearch")
+  .addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      recursosVisibles = 6;
+      renderRecursos();
+    }
+  });
 
 function openResource(tipo, enlace) {
   const modal = document.getElementById("resourceModal");
@@ -383,14 +459,34 @@ function renderVideoCard(recurso) {
 //   `;
 // }
 
-document
-  .getElementById("fullscreenBtn")
-  .addEventListener("click", () => {
-    const modal = document.querySelector(".modal-box");
+// document
+//   .getElementById("fullscreenBtn")
+//   .addEventListener("click", () => {
+//     const modal = document.querySelector(".modal-box");
 
-    if (modal.requestFullscreen) {
-      modal.requestFullscreen();
+//     if (modal.requestFullscreen) {
+//       modal.requestFullscreen();
+//     }
+//   });
+
+  document
+  .getElementById("fullscreenBtn")
+  .addEventListener("click", toggleFullscreen);
+
+  function toggleFullscreen() {
+    const modalBox = document.querySelector(".modal-box");
+
+    if (!document.fullscreenElement) {
+      modalBox.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
+  }
+
+  document.addEventListener("fullscreenchange", () => {
+    const btn = document.getElementById("fullscreenBtn");
+  
+    btn.textContent = document.fullscreenElement ? "🗗" : "⛶";
   });
 
   function renderPDFCard(recurso) {
@@ -459,24 +555,47 @@ function renderGenericCard(recurso) {
 
 async function renderRecursos() {
   const container = document.getElementById("recursosGrid");
+  const btn = document.getElementById("loadMoreBtn");
 
-  // solo carga una vez desde Sheets
+  // cargar una sola vez
   if (recursosData.length === 0) {
     recursosData = await fetchRecursos();
   }
 
-  // filtrar por categoría
-  let recursosFiltrados = recursosData;
+  // iniciar con todos
+  let recursosFiltrados = [...recursosData];
 
+  // filtro por categoría
   if (categoriaActual !== "Todos") {
-    recursosFiltrados = recursosData.filter(r =>
+    recursosFiltrados = recursosFiltrados.filter(r =>
       r.categoria === categoriaActual
     );
   }
 
-  // limitar cantidad visible
-  const visibles = recursosFiltrados.slice(0, recursosVisibles);
+  // filtro por búsqueda
+  const query = document
+    .getElementById("resourceSearch")
+    .value
+    .toLowerCase()
+    .trim();
 
+  if (query !== "") {
+    recursosFiltrados = recursosFiltrados.filter(r =>
+      `
+        ${r.nombre}
+        ${r.tipo}
+        ${r.categoria || ""}
+      `.toLowerCase().includes(query)
+    );
+  }
+
+  // paginación
+  const visibles = recursosFiltrados.slice(
+    0,
+    recursosVisibles
+  );
+
+  // render
   container.innerHTML = visibles.map(recurso => {
     if (recurso.tipo.toLowerCase() === "video") {
       return renderVideoCard(recurso);
@@ -489,14 +608,11 @@ async function renderRecursos() {
     return renderGenericCard(recurso);
   }).join("");
 
-  // botón cargar más
-  const btn = document.getElementById("loadMoreBtn");
-
-  if (recursosVisibles >= recursosFiltrados.length) {
-    btn.style.display = "none";
-  } else {
-    btn.style.display = "inline-block";
-  }
+  // mostrar / ocultar botón
+  btn.style.display =
+    recursosVisibles >= recursosFiltrados.length
+      ? "none"
+      : "inline-block";
 }
 
 document

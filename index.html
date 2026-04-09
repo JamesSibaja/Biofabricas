@@ -159,6 +159,16 @@
         <h2>Recursos técnicos</h2>
         <p>Documentos, videos, fichas y materiales de apoyo</p>
       </div>
+
+      <div class="resource-search-wrap">
+        <input
+          id="resourceSearch"
+          type="text"
+          placeholder="Buscar documentos, videos o fichas..."
+        />
+      
+        <button id="resourceSearchBtn">Buscar</button>
+      </div>
     
       <div class="resource-tabs" id="resourceTabs">
         <button class="tab active" data-cat="Todos">Todos</button>
@@ -178,11 +188,13 @@
 
     <div id="resourceModal" class="resource-modal hidden">
       <div class="modal-box">
-        <div class="modal-actions">
-          <button id="fullscreenBtn">⛶</button>
-          <button id="closeModal">✕</button>
+        <div class="modal-header">
+          <div class="modal-actions">
+            <button id="fullscreenBtn">⛶</button>
+            <button id="closeModal">✕</button>
+          </div>
         </div>
-    
+      
         <div id="modalContent"></div>
       </div>
     </div>
