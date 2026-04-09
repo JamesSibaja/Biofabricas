@@ -20,7 +20,7 @@
   .topbar{
     position:sticky;
     top:0;
-    z-index:1000;
+    z-index:2000;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -225,6 +225,11 @@
     }
   }
   /* MAP DASHBOARD */
+
+  .leaflet-top,
+  .leaflet-bottom{
+      z-index:500 !important;
+  }
   .map-dashboard{
     display:grid;
     grid-template-columns:300px 1fr 360px;
@@ -378,6 +383,26 @@
     grid-template-columns:repeat(4,1fr);
     gap:1.5rem;
     padding:2rem;
+  }
+
+  .pdf-mobile-preview{
+    height:220px;
+    font-size:4rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#eef7f0,#fff);
+}
+
+  #fullscreenBtn,
+  #closeModal{
+      width:44px;
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.2rem;
+      line-height:1;
   }
   
   .card{

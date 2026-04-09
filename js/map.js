@@ -486,19 +486,30 @@ function renderVideoCard(recurso) {
   document.addEventListener("fullscreenchange", () => {
     const btn = document.getElementById("fullscreenBtn");
   
-    btn.textContent = document.fullscreenElement ? "🗗" : "⛶";
+    btn.textContent = "⛶";
   });
 
   function renderPDFCard(recurso) {
+    const isMobile = window.innerWidth <= 768;
+  
+    const preview = isMobile
+      ? `
+        <div class="resource-placeholder pdf-mobile-preview">
+          📄
+        </div>
+      `
+      : `
+        <iframe
+          class="pdf-preview"
+          src="${recurso.enlace}#page=1&view=FitH"
+          loading="lazy"
+        ></iframe>
+      `;
+  
     return `
       <div class="resource-card">
         <div class="pdf-preview-wrap">
-          <iframe
-            class="pdf-preview"
-            src="${recurso.enlace}#page=1&view=FitH"
-            title="${recurso.nombre}"
-            loading="lazy"
-          ></iframe>
+          ${preview}
         </div>
   
         <div class="resource-content">
@@ -507,9 +518,9 @@ function renderVideoCard(recurso) {
   
           <button
             class="resource-btn"
-            onclick="openResource('pdf', '${recurso.enlace}')"
+            onclick="openResource('pdf','${recurso.enlace}')"
           >
-            Ver documento
+            Ampliar documento
           </button>
         </div>
       </div>
