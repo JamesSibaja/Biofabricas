@@ -14,6 +14,12 @@ document.getElementById("closeModal");
 const fullscreenBtn =
 document.getElementById("fullscreenBtn");
 
+const modal =
+    document.getElementById("resourceModal");
+
+    const content =
+    document.getElementById("modalContent");
+
 console.log(document.getElementById("closeModal"));
 console.log(document.getElementById("resourceModal"));
 console.log(document.getElementById("fullscreenBtn"));
@@ -412,11 +418,7 @@ function getYoutubeThumbnail(url){
 
 function openResource(tipo,enlace){
 
-    const modal =
-    document.getElementById("resourceModal");
-
-    const content =
-    document.getElementById("modalContent");
+    
 
     if(tipo.toLowerCase()==="video"){
 
