@@ -17,7 +17,7 @@ document.getElementById("fullscreenBtn");
 const modal =
     document.getElementById("resourceModal");
 
-    const content =
+const modalContent =
     document.getElementById("modalContent");
 
 console.log(document.getElementById("closeModal"));
