@@ -1,0 +1,17 @@
+footer{
+    margin-top:2rem;
+    padding:2rem;
+    background:white;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:2rem;
+    border-top:1px solid #e5e7eb;
+}
+
+footer h4{
+    margin-bottom:.5rem;
+}
+
+footer p{
+    color:#6b7280;
+}

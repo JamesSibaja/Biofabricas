@@ -1,0 +1,56 @@
+/* RESET */
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:#f4f7f5;
+    color:#1f2937;
+    line-height:1.5;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+img{
+    max-width:100%;
+    display:block;
+}
+
+.leaflet-control-attribution{
+    font-size:10px;
+    opacity:.6;
+    background:rgba(255,255,255,.8);
+    border-radius:8px;
+    padding:2px 6px;
+}
+
+.leaflet-top,
+.leaflet-bottom{
+    z-index:500 !important;
+}
+
+.hidden{
+    display:none;
+}
+
+@media(max-width:1200px){
+    footer{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:768px){
+    footer{
+        grid-template-columns:1fr;
+    }
+}
