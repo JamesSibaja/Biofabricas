@@ -2,10 +2,10 @@
 
     background:
         linear-gradient(
-            rgba(255,255,255,.75),
-            rgba(255,255,255,.6)
+            rgba(215,255,215,.45),
+            rgba(215,255,215,.25)
         ),
-        url("../assets/images/ecosistema.jpg");
+        url("../assets/images/hero.jpg");
 
     background-size:cover;
 }
