@@ -6,6 +6,95 @@ let recursos = [];
 let recursosFiltrados = [];
 let categoriaActual = "Todos";
 
+
+
+const closeBtn =
+document.getElementById("closeModal");
+
+const fullscreenBtn =
+document.getElementById("fullscreenBtn");
+
+function closeResourceModal(){
+
+    if(document.fullscreenElement){
+        document.exitFullscreen();
+    }
+
+    modalContent.innerHTML = "";
+
+    modal.classList.add("hidden");
+}
+
+closeBtn.addEventListener(
+    "click",
+    closeResourceModal
+);
+
+modal.addEventListener("click", (e)=>{
+
+    if(e.target === modal){
+
+        closeResourceModal();
+
+    }
+
+});
+
+document
+.querySelector(".modal-box")
+.addEventListener("click",(e)=>{
+
+    e.stopPropagation();
+
+});
+
+document.addEventListener(
+    "keydown",
+    (e)=>{
+
+        if(e.key === "Escape"){
+
+            closeResourceModal();
+
+        }
+
+    }
+);
+
+fullscreenBtn.addEventListener(
+    "click",
+    toggleFullscreen
+);
+
+function toggleFullscreen(){
+
+    const modalBox =
+    document.querySelector(".modal-box");
+
+    if(!document.fullscreenElement){
+
+        modalBox.requestFullscreen();
+
+    }else{
+
+        document.exitFullscreen();
+
+    }
+
+}
+
+document.addEventListener(
+    "fullscreenchange",
+    ()=>{
+
+        fullscreenBtn.textContent =
+        document.fullscreenElement
+            ? "🡼"
+            : "⛶";
+
+    }
+);
+
 // =====================================
 // INICIALIZAR
 // =====================================
@@ -364,16 +453,16 @@ function getYoutubeEmbed(url){
 
 }
 
-document
-.getElementById("closeModal")
-?.addEventListener("click",()=>{
+// document
+// .getElementById("closeModal")
+// ?.addEventListener("click",()=>{
 
-    document
-    .getElementById("resourceModal")
-    .classList.add("hidden");
+//     document
+//     .getElementById("resourceModal")
+//     .classList.add("hidden");
 
-    document
-    .getElementById("modalContent")
-    .innerHTML="";
+//     document
+//     .getElementById("modalContent")
+//     .innerHTML="";
 
-});
+// });

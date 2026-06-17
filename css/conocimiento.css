@@ -19,6 +19,7 @@
     display:flex;
 
     gap:1rem;
+    padding-bottom: 0px;
 }
 
 .global-search input{
@@ -40,7 +41,7 @@
 
     flex-wrap:wrap;
 
-    margin-top:2rem;
+    
 }
 
 .tab{

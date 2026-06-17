@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="css/ecosistema.css">
 <script src="js/data.js"></script>
-<script src="js/conocimiento.js"></script>
+<script src="js/ecosistema.js"></script>
 </head>
 
 <body>
@@ -33,45 +33,163 @@
 </header>
 
 <main class="page-content">
+
+    <!-- HERO -->
     <section class="hero hero-ecosistema">
-        <div class="hero-content">
-        <h1>
-        Ecosistema Nacional
-        de Bioinsumos
-        </h1>
-        
-        <p>
-        Conectando productores,
-        empresas,
-        universidades
-        e instituciones.
-        </p>
-    </div>
-        </section>
 
-    <section class="directory-grid">
+        <div class="hero-overlay">
 
-        <h2>Directorio de actores</h2>
-        
-        <div id="actoresGrid"></div>
-    
+            <div class="hero-content">
+
+                <span class="hero-badge">
+                    Pilar 3
+                </span>
+
+                <h1>
+                    Ecosistema Nacional
+                    de Bioinsumos
+                </h1>
+
+                <p>
+                    Plataforma de articulación sectorial
+                    que conecta productores,
+                    biofábricas, universidades,
+                    empresas e instituciones.
+                </p>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat-card">
+                    <strong id="totalActores">
+                        -
+                    </strong>
+                    <span>Actores</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong id="totalBiofabricas">
+                        -
+                    </strong>
+                    <span>Biofábricas</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong id="totalProyectos">
+                        -
+                    </strong>
+                    <span>Proyectos</span>
+                </div>
+
+            </div>
+
+        </div>
+
     </section>
 
-    <section class="ecosystem-map">
+    <!-- DIRECTORIO -->
 
-        <h2>Mapa Nacional de Biofábricas</h2>
-        
-        <div id="map"></div>
-    
-    </section>
-    
-    <section class="network-section">
+    <section class="content-section">
 
-        <h2>Redes de colaboración</h2>
-        
-        <div id="networkCards"></div>
-    
+        <div class="section-head">
+
+            <h2>
+                Directorio de Actores
+            </h2>
+
+            <input
+                type="text"
+                id="actorSearch"
+                placeholder="Buscar actores..."
+            >
+
+        </div>
+
+        <div
+            id="actoresGrid"
+            class="actor-grid">
+        </div>
+
     </section>
+
+    <!-- MAPA -->
+
+    <section class="content-section">
+
+        <div class="section-head">
+
+            <h2>
+                Mapa Nacional
+                de Biofábricas
+            </h2>
+
+        </div>
+
+        <div
+            id="map"
+            class="ecosystem-map">
+        </div>
+
+    </section>
+
+    <!-- REDES -->
+
+    <section class="content-section">
+
+        <div class="section-head">
+
+            <h2>
+                Redes de Colaboración
+            </h2>
+
+        </div>
+
+        <div
+            id="networkCards"
+            class="network-grid">
+        </div>
+
+    </section>
+
+    <!-- PROYECTOS -->
+
+    <section class="content-section">
+
+        <div class="section-head">
+
+            <h2>
+                Proyectos en Ejecución
+            </h2>
+
+        </div>
+
+        <div
+            id="proyectosGrid"
+            class="project-grid">
+        </div>
+
+    </section>
+
+    <!-- COMUNIDADES -->
+
+    <section class="content-section">
+
+        <div class="section-head">
+
+            <h2>
+                Comunidades de Práctica
+            </h2>
+
+        </div>
+
+        <div
+            id="comunidadesGrid"
+            class="community-grid">
+        </div>
+
+    </section>
+
 </main>
 
 <footer class="site-footer">
