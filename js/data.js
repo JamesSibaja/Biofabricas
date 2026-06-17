@@ -91,45 +91,11 @@ async function fetchKPIs() {
   });
 }
 
+// =============================
+// ACTORES
+// nombre,tipo,provincia,descripcion
+// =============================
 async function fetchActores() {
-
-  const response = await fetch(SHEET_CSV_COMUNIDADES);
-
-  const csv = await response.text();
-
-  const rows = csv.trim().split("\n");
-
-  return rows.slice(1).map(row => {
-
-    const values = row.split(",");
-
-    return {
-      nombre: values[0]?.trim(),
-      valor: values[1]?.trim()
-    };
-  });
-}
-
-async function fetchProyectos() {
-
-  const response = await fetch(SHEET_CSV_PROYECTO);
-
-  const csv = await response.text();
-
-  const rows = csv.trim().split("\n");
-
-  return rows.slice(1).map(row => {
-
-    const values = row.split(",");
-
-    return {
-      nombre: values[0]?.trim(),
-      valor: values[1]?.trim()
-    };
-  });
-}
-
-async function fetchComunidades() {
 
   const response = await fetch(SHEET_CSV_ACTORES);
 
@@ -143,12 +109,65 @@ async function fetchComunidades() {
 
     return {
       nombre: values[0]?.trim(),
-      valor: values[1]?.trim()
+      tipo: values[1]?.trim(),
+      provincia: values[2]?.trim(),
+      descripcion: values[3]?.trim()
     };
+
   });
+
 }
 
+// =============================
+// PROYECTOS
+// nombre,descripcion,estado
+// =============================
+async function fetchProyectos() {
 
+  const response = await fetch(SHEET_CSV_PROYECTOS);
+
+  const csv = await response.text();
+
+  const rows = csv.trim().split("\n");
+
+  return rows.slice(1).map(row => {
+
+    const values = row.split(",");
+
+    return {
+      nombre: values[0]?.trim(),
+      descripcion: values[1]?.trim(),
+      estado: values[2]?.trim()
+    };
+
+  });
+
+}
+
+// =============================
+// COMUNIDADES
+// nombre,descripcion
+// =============================
+async function fetchComunidades() {
+
+  const response = await fetch(SHEET_CSV_COMUNIDADES);
+
+  const csv = await response.text();
+
+  const rows = csv.trim().split("\n");
+
+  return rows.slice(1).map(row => {
+
+    const values = row.split(",");
+
+    return {
+      nombre: values[0]?.trim(),
+      descripcion: values[1]?.trim()
+    };
+
+  });
+
+}
 
 // =====================================
 // RECURSOS
