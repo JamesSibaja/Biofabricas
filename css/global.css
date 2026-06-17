@@ -1,56 +1,60 @@
-/* RESET */
 *{
-    box-sizing:border-box;
     margin:0;
     padding:0;
+    box-sizing:border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html,
+body{
+    height:100%;
 }
 
 body{
+    min-height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
     font-family:Inter,Arial,sans-serif;
+
     background:#f4f7f5;
     color:#1f2937;
-    line-height:1.5;
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
+.page-content{
+    flex:1;
+    width:min(1400px,95%);
+    margin:auto;
+    padding:2rem 0;
 }
 
-img{
-    max-width:100%;
-    display:block;
+.page-header{
+    margin-bottom:2rem;
 }
 
-.leaflet-control-attribution{
-    font-size:10px;
-    opacity:.6;
-    background:rgba(255,255,255,.8);
-    border-radius:8px;
-    padding:2px 6px;
+.page-header h1{
+    font-size:2.5rem;
+    margin-bottom:.5rem;
 }
 
-.leaflet-top,
-.leaflet-bottom{
-    z-index:500 !important;
+.page-header p{
+    color:#6b7280;
 }
 
-.hidden{
-    display:none;
+.resource-grid,
+.experience-grid,
+.entorno-grid{
+    display:grid;
+    gap:1.5rem;
+    grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
 }
 
-@media(max-width:1200px){
-    footer{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
-@media(max-width:768px){
-    footer{
-        grid-template-columns:1fr;
-    }
+.resource-card,
+.experience-card,
+.info-card{
+    background:white;
+    border-radius:20px;
+    padding:2rem;
+    box-shadow:0 8px 24px rgba(0,0,0,.05);
 }

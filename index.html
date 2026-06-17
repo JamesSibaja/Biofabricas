@@ -4,84 +4,98 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Biofábricas Costa Rica</title>
-
-<link rel="manifest" href="./manifest.json">
+<title>Plataforma Nacional de Bioinsumos CR</title>
 
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/header.css">
-<link rel="stylesheet" href="css/hero.css">
 <link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/home.css">
 </head>
 
 <body>
 
 <header class="topbar">
-    <div class="logo">🌿 Biofábricas CR</div>
+
+    <div class="logo">
+        🌿 Bioinsumos CR
+    </div>
 
     <nav class="main-nav">
-        <a href="index.html">Inicio</a>
-        <a href="mapa.html">Mapa</a>
-        <a href="recursos.html">Recursos</a>
+        <a class="active" href="index.html">Inicio</a>
+        <a href="conocimiento.html">Conocimiento Técnico</a>
+        <a href="experiencias.html">Experiencias</a>
+        <a href="ecosistema.html">Ecosistema</a>
+        <a href="entorno.html">Entorno Habilitador</a>
     </nav>
 
-    <a href="mapa.html" class="cta-btn">
-        Explorar mapa
-    </a>
 </header>
 
-<main>
+<main class="page-content">
 
-<section class="hero">
-
-    <div class="hero-overlay">
+    <section class="hero">
 
         <div class="hero-content">
 
-            <h1>Red nacional de biofábricas</h1>
+            <h1>
+                Plataforma Nacional de Gestión del Conocimiento
+                para Bioinsumos de Costa Rica
+            </h1>
 
             <p>
-                Transformando residuos en oportunidades sostenibles.
+                Herramienta de articulación sectorial para fortalecer
+                la innovación, capacitación y adopción de bioinsumos.
             </p>
 
-            <div class="hero-buttons">
+            <div class="global-search">
 
-                <a href="mapa.html" class="primary-btn">
-                    Explorar mapa
-                </a>
+                <input
+                    type="text"
+                    placeholder="Buscar recursos, videos, biofábricas, normativas..."
+                >
 
-                <a href="recursos.html" class="secondary-btn">
-                    Recursos
-                </a>
+                <button>Buscar</button>
 
             </div>
 
         </div>
 
-        <div class="hero-stats" id="heroStats"></div>
+    </section>
 
-    </div>
+    <section class="quick-access">
 
-</section>
+        <a href="conocimiento.html" class="access-card">
+            📚 Conocimiento Técnico
+        </a>
+
+        <a href="experiencias.html" class="access-card">
+            🚜 Experiencias e Innovación
+        </a>
+
+        <a href="ecosistema.html" class="access-card">
+            🗺 Ecosistema Nacional
+        </a>
+
+        <a href="entorno.html" class="access-card">
+            ⚖ Entorno Habilitador
+        </a>
+
+    </section>
 
 </main>
 
-<footer>
+<footer class="footer">
 
-<div>
-<h4>Biofábricas Costa Rica</h4>
-<p>Micrositio técnico</p>
-</div>
+    <div>
+        <h4>Bioinsumos Costa Rica</h4>
+        <p>Plataforma Nacional de Gestión del Conocimiento</p>
+    </div>
 
-<div>
-<h4>Contacto</h4>
-<p>proyecto@biofabricas.cr</p>
-</div>
+    <div>
+        <h4>Contacto</h4>
+        <p>proyecto@bioinsumos.cr</p>
+    </div>
 
 </footer>
-
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
 
 </body>
 </html>
