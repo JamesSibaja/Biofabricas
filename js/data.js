@@ -63,7 +63,7 @@ async function fetchBiofabricas() {
 const SHEET_CSV_KPI =
   `${SHEET_BASE}gid=1232917699&single=true&output=csv`;
 
-const SHEET_CSV_PROYECTO =
+const SHEET_CSV_PROYECTOS =
   `${SHEET_BASE}gid=12082568940&single=true&output=csv`;
 
 const SHEET_CSV_ACTORES =
