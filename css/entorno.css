@@ -5,7 +5,7 @@
             rgba(255,255,215,.75),
             rgba(255,255,215,.65)
         ),
-        url("../assets/images/hero.jpg");
+        url("../assets/images/hero.png");
 
     background-size:cover;
 }
