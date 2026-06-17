@@ -1,36 +1,379 @@
-let recursos = [];
+// =====================================
+// VARIABLES
+// =====================================
 
-async function renderRecursos(){
+let recursos = [];
+let recursosFiltrados = [];
+let categoriaActual = "Todos";
+
+// =====================================
+// INICIALIZAR
+// =====================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    recursos = await fetchRecursos();
+
+    configurarBuscador();
+
+    renderRecursos();
+});
+
+// =====================================
+// BUSCADOR GLOBAL
+// =====================================
+
+function configurarBuscador(){
+
+    const input =
+    document.getElementById("resourceSearch");
+
+    const btn =
+    document.getElementById("resourceSearchBtn");
+
+    btn?.addEventListener("click", renderRecursos);
+
+    input?.addEventListener("keypress",(e)=>{
+
+        if(e.key==="Enter"){
+            renderRecursos();
+        }
+
+    });
+
+    document
+    .querySelectorAll(".tab")
+    .forEach(tab=>{
+
+        tab.addEventListener("click",()=>{
+
+            document
+            .querySelectorAll(".tab")
+            .forEach(t=>t.classList.remove("active"));
+
+            tab.classList.add("active");
+
+            categoriaActual =
+            tab.dataset.cat;
+
+            renderRecursos();
+
+        });
+
+    });
+
+}
+
+// =====================================
+// RENDER
+// =====================================
+
+function renderRecursos(){
 
     const grid =
     document.getElementById("recursosGrid");
 
-    recursos =
-    await fetchRecursos();
+    const total =
+    document.getElementById("resourceCount");
+
+    const query =
+    document
+    .getElementById("resourceSearch")
+    ?.value
+    ?.toLowerCase()
+    ?.trim() || "";
+
+    recursosFiltrados =
+    recursos.filter(r=>{
+
+        const matchCategoria =
+        categoriaActual === "Todos"
+        ||
+        r.categoria === categoriaActual;
+
+        const matchTexto =
+        query === ""
+        ||
+        `
+            ${r.nombre}
+            ${r.tipo}
+            ${r.categoria}
+        `
+        .toLowerCase()
+        .includes(query);
+
+        return matchCategoria && matchTexto;
+
+    });
+
+    if(total){
+
+        total.innerHTML =
+        `${recursosFiltrados.length} recursos encontrados`;
+
+    }
+
+    if(recursosFiltrados.length===0){
+
+        grid.innerHTML = `
+            <div class="empty-state">
+                <h3>No se encontraron recursos</h3>
+                <p>
+                    Intenta otro término de búsqueda.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
 
     grid.innerHTML =
-    recursos.map(r=>`
+    recursosFiltrados
+    .map(renderCard)
+    .join("");
 
-        <div class="resource-card">
+}
+
+// =====================================
+// CARD SEGÚN TIPO
+// =====================================
+
+function renderCard(recurso){
+
+    const tipo =
+    recurso.tipo?.toLowerCase();
+
+    if(tipo==="video"){
+
+        return renderVideoCard(recurso);
+
+    }
+
+    if(tipo==="pdf"){
+
+        return renderPDFCard(recurso);
+
+    }
+
+    return renderGenericCard(recurso);
+
+}
+
+// =====================================
+// VIDEO
+// =====================================
+
+function renderVideoCard(recurso){
+
+    const thumb =
+    getYoutubeThumbnail(recurso.enlace);
+
+    return `
+
+        <article
+            class="resource-card"
+            onclick="openResource(
+                '${recurso.tipo}',
+                '${recurso.enlace}'
+            )"
+        >
+
+            <img
+                class="resource-preview"
+                src="${thumb}"
+                alt="${recurso.nombre}"
+            >
 
             <div class="resource-content">
 
-                <h3>${r.nombre}</h3>
+                <span class="resource-type">
+                    🎥 Video
+                </span>
 
-                <p>${r.categoria}</p>
+                <h3>
+                    ${recurso.nombre}
+                </h3>
 
-                <a href="${r.enlace}"
-                   target="_blank">
+                <p>
+                    ${recurso.categoria}
+                </p>
 
-                   Abrir
+            </div>
 
+        </article>
+
+    `;
+
+}
+
+// =====================================
+// PDF
+// =====================================
+
+function renderPDFCard(recurso){
+
+    return `
+
+        <article class="resource-card">
+
+            <div class="pdf-mobile-preview">
+                📄
+            </div>
+
+            <div class="resource-content">
+
+                <span class="resource-type">
+                    📚 Documento
+                </span>
+
+                <h3>
+                    ${recurso.nombre}
+                </h3>
+
+                <p>
+                    ${recurso.categoria}
+                </p>
+
+                <button
+                    class="resource-btn"
+                    onclick="openResource(
+                        'pdf',
+                        '${recurso.enlace}'
+                    )"
+                >
+                    Ver documento
+                </button>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+// =====================================
+// OTROS
+// =====================================
+
+function renderGenericCard(recurso){
+
+    return `
+
+        <article class="resource-card">
+
+            <div class="resource-placeholder">
+                📁
+            </div>
+
+            <div class="resource-content">
+
+                <span class="resource-type">
+                    ${recurso.tipo}
+                </span>
+
+                <h3>
+                    ${recurso.nombre}
+                </h3>
+
+                <p>
+                    ${recurso.categoria}
+                </p>
+
+                <a
+                    class="resource-btn"
+                    href="${recurso.enlace}"
+                    target="_blank"
+                >
+                    Abrir recurso
                 </a>
 
             </div>
 
-        </div>
+        </article>
 
-    `).join("");
+    `;
+
 }
 
-renderRecursos();
+// =====================================
+// YOUTUBE
+// =====================================
+
+function getYoutubeThumbnail(url){
+
+    const match =
+    url.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/i
+    );
+
+    return match
+      ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`
+      : "assets/images/video-placeholder.jpg";
+
+}
+
+// =====================================
+// MODAL
+// =====================================
+
+function openResource(tipo,enlace){
+
+    const modal =
+    document.getElementById("resourceModal");
+
+    const content =
+    document.getElementById("modalContent");
+
+    if(tipo.toLowerCase()==="video"){
+
+        const embed =
+        getYoutubeEmbed(enlace);
+
+        content.innerHTML = `
+            <iframe
+                src="${embed}"
+                allowfullscreen
+            ></iframe>
+        `;
+
+    }else{
+
+        content.innerHTML = `
+            <iframe
+                src="${enlace}"
+            ></iframe>
+        `;
+
+    }
+
+    modal.classList.remove("hidden");
+
+}
+
+function getYoutubeEmbed(url){
+
+    const match =
+    url.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^?&]+)/i
+    );
+
+    return match
+      ? `https://www.youtube.com/embed/${match[1]}`
+      : "";
+
+}
+
+document
+.getElementById("closeModal")
+?.addEventListener("click",()=>{
+
+    document
+    .getElementById("resourceModal")
+    .classList.add("hidden");
+
+    document
+    .getElementById("modalContent")
+    .innerHTML="";
+
+});

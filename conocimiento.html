@@ -61,23 +61,74 @@
         >
         
         <button id="resourceSearchBtn">
-            🔍 Buscar
+            Buscar
         </button>
         
         </section>
         
         <section>
         
-        <div class="resource-tabs">
-        
-        <button class="tab active">Todos</button>
-        <button class="tab">Capacitación</button>
-        <button class="tab">Documentación</button>
-        <button class="tab">Fichas</button>
-        
-        </div>
-        
-        <div id="recursosGrid"></div>
+            <div class="resource-search-wrap">
+
+                <input
+                    id="resourceSearch"
+                    type="text"
+                    placeholder="Buscar recursos..."
+                >
+            
+                <button id="resourceSearchBtn">
+                    Buscar
+                </button>
+            
+            </div>
+            
+            <div class="resource-tabs">
+            
+                <button
+                    class="tab active"
+                    data-cat="Todos">
+                    Todos
+                </button>
+            
+                <button
+                    class="tab"
+                    data-cat="Capacitación">
+                    Capacitación
+                </button>
+            
+                <button
+                    class="tab"
+                    data-cat="Documentación">
+                    Documentación
+                </button>
+            
+                <button
+                    class="tab"
+                    data-cat="Fichas">
+                    Fichas
+                </button>
+            
+            </div>
+            
+            <p id="resourceCount"></p>
+            
+            <div id="recursosGrid"></div>
+            
+            <div
+                id="resourceModal"
+                class="resource-modal hidden">
+            
+                <div class="modal-box">
+            
+                    <button id="closeModal">
+                        ✕
+                    </button>
+            
+                    <div id="modalContent"></div>
+            
+                </div>
+            
+            </div>
         
         </section>
 </main>
