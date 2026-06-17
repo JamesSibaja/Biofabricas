@@ -141,3 +141,106 @@
     cursor:not-allowed;
     transform:none;
 }
+
+.resources-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(340px,1fr));
+
+    gap:1.5rem;
+}
+
+/* ==========================
+   TARJETAS
+========================== */
+
+.resource-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.resource-card:hover{
+    transform:translateY(-4px);
+}
+
+/* ==========================
+   IMAGEN PREVIEW
+========================== */
+
+.resource-preview{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+/* ==========================
+   CONTENIDO
+========================== */
+
+.resource-content{
+    padding:1.25rem;
+}
+
+.resource-content h3{
+    margin-bottom:.5rem;
+    font-size:1.1rem;
+}
+
+.resource-content p{
+    color:#6b7280;
+    margin-bottom:1rem;
+}
+
+/* ==========================
+   CATEGORÍA
+========================== */
+
+.resource-category{
+    display:inline-flex;
+
+    padding:.4rem .8rem;
+
+    background:#ecfdf5;
+
+    color:#166534;
+
+    border-radius:999px;
+
+    font-size:.8rem;
+
+    font-weight:600;
+}
+
+/* ==========================
+   BOTÓN
+========================== */
+
+.resource-btn{
+    display:block;
+
+    width:100%;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:.9rem;
+
+    background:#166534;
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    text-align:center;
+
+    text-decoration:none;
+}
