@@ -1,0 +1,40 @@
+.hero-ecosistema{
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.75),
+            rgba(255,255,255,.6)
+        ),
+        url("../assets/images/ecosistema.jpg");
+
+    background-size:cover;
+}
+
+.directory-grid,
+.network-section{
+
+    max-width:1400px;
+    margin:auto;
+}
+
+#actoresGrid,
+#networkCards{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(300px,1fr));
+
+    gap:1.5rem;
+}
+
+.ecosystem-map{
+
+    max-width:1400px;
+    margin:auto;
+}
+
+.ecosystem-map #map{
+    height:700px;
+    border-radius:20px;
+}

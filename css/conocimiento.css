@@ -1,0 +1,76 @@
+.hero-conocimiento{
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.8),
+            rgba(255,255,255,.7)
+        ),
+        url("../assets/images/conocimiento.jpg");
+
+    background-size:cover;
+}
+
+.global-search{
+
+    max-width:1000px;
+
+    margin:auto;
+
+    display:flex;
+
+    gap:1rem;
+}
+
+.global-search input{
+
+    flex:1;
+
+    padding:1rem;
+
+    border-radius:14px;
+
+    border:1px solid #d1d5db;
+}
+
+.resource-tabs{
+
+    display:flex;
+
+    gap:.75rem;
+
+    flex-wrap:wrap;
+
+    margin-top:2rem;
+}
+
+.tab{
+
+    border:none;
+
+    background:white;
+
+    padding:.7rem 1rem;
+
+    border-radius:999px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+
+    cursor:pointer;
+}
+
+.tab.active{
+    background:#166534;
+    color:white;
+}
+
+#recursosGrid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(320px,1fr));
+
+    gap:1.5rem;
+
+    margin-top:2rem;
+}
