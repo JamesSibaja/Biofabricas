@@ -63,6 +63,15 @@ async function fetchBiofabricas() {
 const SHEET_CSV_KPI =
   `${SHEET_BASE}gid=1232917699&single=true&output=csv`;
 
+const SHEET_CSV_PROYECTO =
+  `${SHEET_BASE}gid=12082568940&single=true&output=csv`;
+
+const SHEET_CSV_ACTORES =
+  `${SHEET_BASE}gid=420197289&single=true&output=csv`;
+
+const SHEET_CSV_COMUNIDADES =
+  `${SHEET_BASE}gid=1841378715&single=true&output=csv`;
+
 async function fetchKPIs() {
 
   const response = await fetch(SHEET_CSV_KPI);
@@ -81,6 +90,65 @@ async function fetchKPIs() {
     };
   });
 }
+
+async function fetchActores() {
+
+  const response = await fetch(SHEET_CSV_COMUNIDADES);
+
+  const csv = await response.text();
+
+  const rows = csv.trim().split("\n");
+
+  return rows.slice(1).map(row => {
+
+    const values = row.split(",");
+
+    return {
+      nombre: values[0]?.trim(),
+      valor: values[1]?.trim()
+    };
+  });
+}
+
+async function fetchProyectos() {
+
+  const response = await fetch(SHEET_CSV_PROYECTO);
+
+  const csv = await response.text();
+
+  const rows = csv.trim().split("\n");
+
+  return rows.slice(1).map(row => {
+
+    const values = row.split(",");
+
+    return {
+      nombre: values[0]?.trim(),
+      valor: values[1]?.trim()
+    };
+  });
+}
+
+async function fetchComunidades() {
+
+  const response = await fetch(SHEET_CSV_ACTORES);
+
+  const csv = await response.text();
+
+  const rows = csv.trim().split("\n");
+
+  return rows.slice(1).map(row => {
+
+    const values = row.split(",");
+
+    return {
+      nombre: values[0]?.trim(),
+      valor: values[1]?.trim()
+    };
+  });
+}
+
+
 
 // =====================================
 // RECURSOS

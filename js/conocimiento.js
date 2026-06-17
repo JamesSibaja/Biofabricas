@@ -14,6 +14,10 @@ document.getElementById("closeModal");
 const fullscreenBtn =
 document.getElementById("fullscreenBtn");
 
+console.log(document.getElementById("closeModal"));
+console.log(document.getElementById("resourceModal"));
+console.log(document.getElementById("fullscreenBtn"));
+
 function closeResourceModal(){
 
     if(document.fullscreenElement){
